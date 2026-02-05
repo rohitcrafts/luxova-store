@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Luxova</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div style="width:46px;height:46px;border-radius:8px;background-color:black;display:flex;align-items:center;justify-content:center;font-weight:800;color:gold; cursor: pointer;" onclick="hello(this)" class="don">LUXO</div>
+    <div>
+      <h1>Luxova</h1>
+      <div class="small" style="color:gold;">Premium Product</div>
+    </div>
+  </div>
+  <div class="logo-right">
+    <img src="images.jpeg" alt="Logo" />
+    <button id="btn-open-admin" class="btn">Admin Panel</button>
+  </div>
+</header>
+
+<main>
+  <div id="homePage" class="page active">
+    <h2 style="color:gold;">Our Products</h2>
+    <div id="search-container" style="display:none;">
+      <input type="text" id="search-input" placeholder="Search products..." />
+    </div>
+    <section class="products" id="products"></section>
+  </div>
+
+  <div id="cartPage" class="page">
+    <aside class="cart">
+      <h2>Shopping Cart</h2>
+      <div id="cart-items"><div class="small">Your cart is empty.</div></div>
+      <div id="cart-total" class="cart-total">Total: $0.00</div>
+      <div style="display:flex; gap:10px; margin-top:8px;">
+        <button id="btn-buy" class="btn" disabled>Buy Now</button>
+        <button id="btn-clear-cart" class="btn">Clear</button>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<div class="bottom-nav">
+  <button id="homeBtn" class="active" onclick="showPage('home')">🏠<span style="color: gold;"><b>Home</b></span></button>
+  <button id="searchBtn" title="Search Products" onclick="toggleSearch()">🔍<span style="color: gold;"><b>Search</b></span></button>
+  <button id="collectionBtn" onclick="showPage('collection')" title="Luxury Collection">🏆
+  <span style="color:gold;"><b>Collection</b></span>
+</button>
+
+  <button id="cartBtn" onclick="showPage('cart')">🛒<span style="color: gold;"><b>Cart</b></span></button>
+</div>
+
+<div class="modal-backdrop" id="admin-modal">
+  <div class="modal" role="dialog" aria-modal="true" style="background-color: white;">
+    <h2>Admin Panel — Orders</h2>
+    <div style="display:flex; gap:8px; margin:10px 0;">
+      <input id="admin-filter-phone" placeholder="Filter by phone (optional)" style="padding:8px;border-radius:8px;border:1px solid #e5e7eb;flex:1;" />
+      <button id="admin-filter-btn" class="btn btn-muted" style="color: black; background-color: gold;">Filter</button>
+      <button id="admin-refresh" class="btn">Refresh</button>
+    </div>
+    <div style="display:flex; gap:8px; margin-bottom:10px;">
+      <button id="download-json" class="btn">Download JSON</button>                                 
+      <button id="clear-orders" class="btn">Clear All Orders</button>
+    </div>
+    <div id="admin-list" style="max-height:60vh; overflow:auto; border-top:1px solid #f3f4f6; padding-top:10px;"></div>
+    <div style="display:flex; justify-content:flex-end; margin-top:12px;">
+      <button id="admin-close" class="btn btn-muted" style="color: black; background-color: gold;">Close</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="order-modal" >
+  <div class="modal" role="dialog" aria-modal="true">
+    <h2>Order Form</h2>
+    <div id="order-summary" style="margin:10px 0 14px; background:#f8fafc; padding:10px; border-radius:8px;"></div>
+
+    <div class="form-row"><input id="input-name" placeholder="Full name (required)" /></div>
+    <div class="form-row"><input id="input-phone" placeholder="Phone number (required)" /></div>
+    <div class="form-row"><input id="input-address" placeholder="Address, city, pin" /></div>
+    <div class="form-row">
+      <select id="input-delivery">
+        <option>Home</option>
+        <option>Office</option>
+        <option>Hospital</option>
+        <option>Other</option>
+      </select>
+    </div>
+    <div class="form-row" id="other-row" style="display:none;">
+      <input id="input-other" placeholder="Other location detail (if selected)" />
+    </div>
+    <div class="form-row">
+      <textarea id="input-instr" rows="3" placeholder="Special instructions (e.g., reject partial qty)"></textarea>
+    </div>
+    <div class="modal-footer">
+      <button id="order-cancel" class="btn btn-muted" style="background-color: gold; color: black;">Cancel</button>
+      <button id="order-submit" class="btn" style="background-color: gold; color: black;">Submit & Send WhatsApp</button>
+    </div>
+  </div>
+  </div>
+  <div class="modal-backdrop" id="product-modal">
+  <div class="modal" role="dialog" aria-modal="true" style="max-width:440px; background-color: white;">
+    <img id="modal-product-image" src="" style="width:100%;border-radius:12px;max-height:244px;object-fit:contain;" />
+    <h3 id="modal-product-title"></h3>
+    <div id="modal-product-price" style="color:var(--accent);font-weight:700;font-size:1.12rem;"></div>
+    <div id="modal-product-desc" style="color:var(--muted);margin-bottom:12px;"></div>
+    <div class="actions">
+      <input type="number" class="qty" id="modal-qty" min="1" value="1" />
+      <button class="btn" id="modal-buy-now-btn">Buy Now</button>
+      <button class="btn btn-muted" id="modal-close-btn" style="background-color: black; color: black;">Close</button>
+    </div>
+  </div>
+  </div>
+  <div class="hero">
+    <div class="side-panal" id="panal">
+      <h2 style="text-align: center;">Luxova</h2>
+      <p><b>About Luxova</b></p>
+      <p>Luxova is a premium lifestyle brand dedicated to redefining modern luxury through timeless craftsmanship and contemporary design. From finely tailored clothing to exquisite footwear, every Luxova creation blends elegance, comfort, and exclusivity. Designed for those who value sophistication in every detail, Luxova stands as a symbol of refined taste and elevated living — where style meets unmatched quality.</p>
+    </div>
+  </div>
+
+  <div id="luxova-popup" class="aman"> 
+  <div class="kapil">
+    <h2>Welcome to Luxova</h2>
+    <p>Discover luxury like never before!</p>
+    <button onclick="closePopup()" class="message">Got it</button>
+  </div>
+</div>
+
+<div id="offer-popup" style="
+    position: fixed;
+    right: -350px;
+    bottom: 20px;
+    width: 300px;
+    background-color: gold;
+    color: black;
+    padding: 20px;
+    border-radius: 10px 0 0 10px;
+    box-shadow: -2px 2px 10px rgba(0,0,0,0.4);
+    font-family: Arial, sans-serif;
+    transition: right 0.6s ease;
+    z-index: 9999;">
+  <h3 style='margin:0 0 10px 0;'>Limited Time Offer!</h3>
+  <p style='margin:0;'>“Hurry up! The offer ends soon!”</p>
+  <button onclick="closeOffer()" style="
+      margin-top: 10px;
+      background-color: black;
+      color: gold;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 4px;
+      cursor: pointer;">
+    Close
+  </button>
+</div>
+
+<button id="scroll-to-top">↑</button>
+<section class="products" id="productssection"></section>
+
+<script src="script.js"></script>
+
+</body>
+</html>
